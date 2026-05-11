@@ -11,23 +11,26 @@ Quick Start:
         result = context.invoke("Summarize: {text}", text=event["body"]["text"])
         return {"statusCode": 200, "body": result}
 
-Chains:
-    from lambdallm import handler, Chain, Step
+Agents:
+    from lambdallm import handler, Model
+    from lambdallm.agents import Agent, Tool
 
-    pipeline = Chain(
-        name="analysis",
-        steps=[
-            Step("extract", prompt="Extract entities: {input}"),
-            Step("classify", prompt="Classify: {extract.output}"),
-        ],
-        timeout_strategy="checkpoint",
-    )
+    @Tool(description="Search documents")
+    def search(query: str) -> list:
+        pass
+
+    agent = Agent(name="researcher", system_prompt="...", tools=[search])
+
+    @handler(model=Model.CLAUDE_3_SONNET)
+    def lambda_handler(event, context):
+        result = agent.run(query=event["body"]["question"], context=context)
+        return {"statusCode": 200, "body": result.answer}
 
 GitHub: https://github.com/substrai/lambdallm
 Docs: https://docs.substrai.dev/lambdallm
 """
 
-__version__ = "0.2.0"
+__version__ = "0.3.0"
 __author__ = "Gaurav Kumar Sinha"
 __email__ = "gaurav@substrai.dev"
 
