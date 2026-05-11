@@ -283,7 +283,7 @@ def init_project(name: str, template: str = "basic"):
     _write(os.path.join(project_dir, "tests", "golden", ".gitkeep"), "")
 
     # Write requirements
-    _write(os.path.join(project_dir, "requirements.txt"), "lambdallm[bedrock]>=0.1.0\n")
+    _write(os.path.join(project_dir, "requirements.txt"), "substrai-lambdallm[bedrock]>=1.0.0\n")
 
     # Write README
     readme = f"""# {name}
