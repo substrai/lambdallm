@@ -82,8 +82,13 @@ npm install substrai-lambdallm
 
 ## Quick Start
 
+### Python (full CLI experience)
+
 ```bash
-# Initialize a new project
+# Install
+pip install "substrai-lambdallm[bedrock]"
+
+# Scaffold a new project (creates handler, config, tests)
 lambdallm init my-project --template basic
 cd my-project
 
@@ -93,9 +98,52 @@ lambdallm dev
 # Test your handler
 curl -X POST http://localhost:3000 -d '{"text": "Hello world"}'
 
+# Run tests
+lambdallm test
+
 # Deploy to AWS
 lambdallm deploy --env dev
 ```
+
+### TypeScript (runtime SDK)
+
+```bash
+# Install
+npm install substrai-lambdallm @aws-sdk/client-bedrock-runtime
+```
+
+Create your handler:
+
+```typescript
+// handler.ts
+import { handler, Model } from 'substrai-lambdallm';
+
+export const lambdaHandler = handler(
+  { model: Model.CLAUDE_3_HAIKU, maxRetries: 3 },
+  async (event, context) => {
+    const body = JSON.parse(event.body || \'{}\');
+    const result = await context.invoke('Summarize: {text}', { text: body.text });
+    return { statusCode: 200, body: { result, cost: context.totalCost } };
+  }
+);
+```
+
+Deploy with SAM or CDK:
+
+```bash
+sam build && sam deploy --guided
+```
+
+### Key Differences
+
+| Capability | Python | TypeScript |
+|-----------|--------|------------|
+| CLI (init, dev, deploy) | \u2705 Included | \u274c Use SAM/CDK directly |
+| Project scaffolding | `lambdallm init` | Manual setup |
+| Local dev server | `lambdallm dev` | `sam local start-api` |
+| Runtime SDK | \u2705 Full | \u2705 Full |
+| Chains + Agents | \u2705 Full | \u2705 Full |
+| Observability | \u2705 Full | \u2705 Full |
 
 ## Available Templates
 
