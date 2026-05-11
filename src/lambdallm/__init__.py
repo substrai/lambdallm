@@ -3,34 +3,11 @@
 The first framework purpose-built for Lambda's stateless, cold-start-optimized,
 timeout-constrained execution model.
 
-Quick Start:
-    from lambdallm import handler, Prompt, Model
-
-    @handler(model=Model.CLAUDE_3_HAIKU)
-    def lambda_handler(event, context):
-        result = context.invoke("Summarize: {text}", text=event["body"]["text"])
-        return {"statusCode": 200, "body": result}
-
-Agents:
-    from lambdallm import handler, Model
-    from lambdallm.agents import Agent, Tool
-
-    @Tool(description="Search documents")
-    def search(query: str) -> list:
-        pass
-
-    agent = Agent(name="researcher", system_prompt="...", tools=[search])
-
-    @handler(model=Model.CLAUDE_3_SONNET)
-    def lambda_handler(event, context):
-        result = agent.run(query=event["body"]["question"], context=context)
-        return {"statusCode": 200, "body": result.answer}
-
 GitHub: https://github.com/substrai/lambdallm
 Docs: https://docs.substrai.dev/lambdallm
 """
 
-__version__ = "0.3.0"
+__version__ = "0.4.0"
 __author__ = "Gaurav Kumar Sinha"
 __email__ = "gaurav@substrai.dev"
 
