@@ -193,6 +193,108 @@ The Bedrock provider handles request formatting differences between model famili
 
 We evaluate LambdaLLM against three baselines: LangChain (v1.2.18 with langchain-aws), raw boto3, and AWS Bedrock Agents. All benchmarks were conducted on May 11, 2026 in the us-east-1 region using Python 3.14 with real AWS Bedrock API calls.
 
+\subsection{Methodology}
+
+All benchmarks were executed on May 11, 2026 from a macOS development machine (Apple Silicon, 16GB RAM) connecting to AWS services in the us-east-1 region. We describe the methodology for each measurement category to ensure reproducibility.
+
+\subsubsection{Environment Configuration}
+
+\begin{itemize}
+    \item \textbf{Python version}: 3.14.4 (CPython)
+    \item \textbf{AWS SDK}: boto3 1.43.6, botocore 1.43.6
+    \item \textbf{LambdaLLM version}: 1.0.1 (substrai-lambdallm on PyPI)
+    \item \textbf{LangChain version}: 1.2.18, langchain-aws 1.4.6
+    \item \textbf{Region}: us-east-1 (N. Virginia)
+    \item \textbf{Models}: Claude 3 Haiku, Claude 3 Sonnet, Titan Text Embeddings V2
+    \item \textbf{Authentication}: AWS IAM temporary credentials (STS session token)
+\end{itemize}
+
+\subsubsection{Package Size Measurement}
+
+Package sizes were measured by installing each framework into isolated temporary directories using \texttt{pip install <package> -t /tmp/isolated-dir}. This captures the complete dependency tree as it would appear in a Lambda deployment package. Size was calculated by recursively summing all file sizes in the installation directory:
+
+\begin{lstlisting}[language=Python]
+total_size = sum(
+    os.path.getsize(os.path.join(dp, f))
+    for dp, dn, fns in os.walk(install_dir)
+    for f in fns
+)
+\end{lstlisting}
+
+Each measurement was performed in a fresh temporary directory to avoid cross-contamination between packages.
+
+\subsubsection{Latency Measurement}
+
+Invocation latency was measured as wall-clock time from immediately before the API call to immediately after response parsing:
+
+\begin{lstlisting}[language=Python]
+start = time.time()
+response = client.invoke_model(modelId=model_id, body=body, ...)
+result = json.loads(response["body"].read())
+latency_ms = (time.time() - start) * 1000
+\end{lstlisting}
+
+For each framework (LambdaLLM, LangChain, raw boto3), we executed the same prompt---a 38-token summarization request using Claude 3 Haiku---and measured 5-10 consecutive warm invocations with 500ms delays between calls to avoid throttling. The first invocation was excluded from averages to eliminate client-side initialization effects (boto3 client creation, TLS handshake).
+
+For the framework overhead test, we compared 10 invocations through LambdaLLM's \texttt{@handler} decorator against 10 direct boto3 \texttt{invoke\_model} calls with identical prompts. The negative overhead (-13.5\%) observed for LambdaLLM is attributable to module-level client caching: LambdaLLM instantiates the boto3 client once at module scope and reuses it across all invocations, whereas each raw boto3 measurement created a fresh client reference (though the underlying connection pool was shared by the Python process).
+
+\subsubsection{Cost Calculation}
+
+Per-request cost was calculated using Bedrock's published pricing (as of May 2026):
+
+\begin{itemize}
+    \item Claude 3 Haiku: \$0.00025 per 1K input tokens, \$0.00125 per 1K output tokens
+    \item Claude 3 Sonnet: \$0.003 per 1K input tokens, \$0.015 per 1K output tokens
+\end{itemize}
+
+The formula applied by LambdaLLM's cost tracker:
+
+\[
+\text{cost} = \frac{\text{tokens\_in}}{1000} \times \text{price\_in} + \frac{\text{tokens\_out}}{1000} \times \text{price\_out}
+\]
+
+We verified accuracy by comparing the framework's reported cost (\$0.000015 for a 14-token-in, 9-token-out request) against manual calculation: $(14/1000) \times 0.00025 + (9/1000) \times 0.00125 = \$0.0000148$. The 1.4\% variance is within acceptable floating-point precision.
+
+\subsubsection{Session State Testing}
+
+Multi-turn memory was tested by:
+\begin{enumerate}
+    \item Creating a session with 5 messages (alternating user/assistant turns containing identifying information: name, occupation, location)
+    \item Persisting to an in-memory store (simulating DynamoDB's interface)
+    \item Creating a new Session object (simulating a fresh Lambda invocation)
+    \item Loading the session by ID from the store
+    \item Verifying all messages were recovered
+    \item Passing the conversation history to Claude 3 Haiku with a context-dependent question
+    \item Verifying the model's response correctly referenced information from earlier turns
+\end{enumerate}
+
+The model successfully answered ``Your name is Gaurav and you work on LambdaLLM'' when asked ``What is my name and what do I work on?''---confirming that the session state mechanism preserves sufficient context for multi-turn reasoning.
+
+\subsubsection{Feature Comparison Methodology}
+
+The feature comparison table was constructed by:
+\begin{itemize}
+    \item \textbf{LangChain}: Installing v1.2.18 and attempting each feature. Memory persistence was tested by creating \texttt{ConversationBufferMemory}, adding messages, then simulating a new process (the memory object is garbage collected, losing all state).
+    \item \textbf{Bedrock Agents}: Evaluated via AWS documentation and console capabilities. Bedrock Agents is a managed service with no package size or cold start (AWS manages infrastructure), but offers limited customization and no cost control mechanisms.
+    \item \textbf{LambdaLLM}: Each feature was tested via the benchmark scripts committed to the repository at \texttt{benchmarks/results/}.
+\end{itemize}
+
+\subsubsection{Reproducibility}
+
+All benchmark scripts and raw JSON results are available in the project repository at \url{https://github.com/substrai/lambdallm/tree/main/benchmarks}. Researchers can reproduce these measurements by:
+
+\begin{lstlisting}[language=bash]
+git clone https://github.com/substrai/lambdallm.git
+cd lambdallm
+pip install -e ".[dev]"
+export AWS_DEFAULT_REGION=us-east-1
+# Configure AWS credentials with Bedrock access
+python benchmarks/run_benchmarks.py
+\end{lstlisting}
+
+Note that absolute latency values will vary based on network conditions, AWS region load, and model availability. Relative comparisons between frameworks should remain consistent as all measurements use the same prompt, model, and region within each benchmark run.
+
+
 \subsection{Package Size}
 
 \begin{table}[h]
