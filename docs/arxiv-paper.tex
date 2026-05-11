@@ -1,135 +1,189 @@
-% LambdaLLM: A Serverless-Native Framework for LLM Orchestration on AWS Lambda
-% arXiv preprint - cs.SE (Software Engineering)
-% Author: Gaurav Kumar Sinha <gaurav@substrai.dev>
+\documentclass[10pt,twocolumn,letterpaper]{article}
 
-\documentclass[11pt,a4paper]{article}
+% --- Packages ---
+\usepackage[letterpaper, margin=0.75in, columnsep=0.3in]{geometry}
+\usepackage{times}
+\usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
+\usepackage{microtype}
 \usepackage{amsmath}
 \usepackage{graphicx}
-\usepackage{hyperref}
 \usepackage{booktabs}
-\usepackage{listings}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{caption}
+\usepackage{hyperref}
+\usepackage{url}
 \usepackage{xcolor}
-\usepackage[margin=1in]{geometry}
+\usepackage{listings}
+\usepackage{abstract}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
 
-\definecolor{codegreen}{rgb}{0,0.6,0}
-\definecolor{codegray}{rgb}{0.5,0.5,0.5}
-\definecolor{codepurple}{rgb}{0.58,0,0.82}
-\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
-
-\lstdefinestyle{mystyle}{
-    backgroundcolor=\color{backcolour},
-    commentstyle=\color{codegreen},
-    keywordstyle=\color{codepurple},
-    numberstyle=\tiny\color{codegray},
-    stringstyle=\color{codegreen},
-    basicstyle=\ttfamily\small,
-    breaklines=true,
-    frame=single,
+% --- Hyperlink styling ---
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    citecolor=blue,
+    urlcolor=blue,
+    pdfborder={0 0 0}
 }
-\lstset{style=mystyle}
 
-\title{LambdaLLM: A Serverless-Native Framework for LLM Orchestration on AWS Lambda}
+% --- Listing style for code blocks ---
+\definecolor{codegray}{rgb}{0.95,0.95,0.95}
+\definecolor{codekeyword}{rgb}{0.0,0.0,0.6}
+\definecolor{codestring}{rgb}{0.0,0.5,0.0}
+\definecolor{codecomment}{rgb}{0.4,0.4,0.4}
+
+\lstset{
+    basicstyle=\ttfamily\scriptsize,
+    backgroundcolor=\color{codegray},
+    keywordstyle=\color{codekeyword}\bfseries,
+    stringstyle=\color{codestring},
+    commentstyle=\color{codecomment}\itshape,
+    breaklines=true,
+    breakatwhitespace=true,
+    columns=fullflexible,
+    keepspaces=true,
+    showstringspaces=false,
+    frame=single,
+    framesep=3pt,
+    framerule=0.3pt,
+    rulecolor=\color{gray!40},
+    aboveskip=6pt,
+    belowskip=6pt,
+    xleftmargin=4pt,
+    xrightmargin=4pt,
+    tabsize=2,
+    language=Python
+}
+
+% --- Title formatting ---
+\titleformat{\section}{\normalfont\large\bfseries}{\thesection}{0.6em}{}
+\titleformat{\subsection}{\normalfont\normalsize\bfseries}{\thesubsection}{0.5em}{}
+\titleformat{\subsubsection}{\normalfont\normalsize\itshape}{\thesubsubsection}{0.5em}{}
+\titlespacing*{\section}{0pt}{8pt}{4pt}
+\titlespacing*{\subsection}{0pt}{6pt}{3pt}
+\titlespacing*{\subsubsection}{0pt}{5pt}{2pt}
+
+% --- Abstract formatting ---
+\renewcommand{\abstractnamefont}{\normalfont\bfseries}
+\renewcommand{\abstracttextfont}{\normalfont\small}
+\setlength{\absleftindent}{0pt}
+\setlength{\absrightindent}{0pt}
+
+% --- Title block ---
+\title{\Large\bfseries LambdaLLM: A Serverless-Native Framework for LLM Orchestration on AWS Lambda}
 
 \author{
-Gaurav Kumar Sinha\\
-SubstrAI\\
-\texttt{gaurav@substrai.dev}\\
-\url{https://github.com/substrai/lambdallm}
+    Gaurav Kumar Sinha \\
+    SubstrAI \\
+    \texttt{gaurav@substrai.dev} \\
+    \url{https://github.com/substrai/lambdallm}
 }
-
 \date{May 2026}
 
 \begin{document}
 
+\twocolumn[
+\begin{@twocolumnfalse}
 \maketitle
-
 \begin{abstract}
-Large Language Model (LLM) orchestration frameworks such as LangChain and LlamaIndex assume persistent server processes with unlimited execution time and stateful memory. These assumptions make them fundamentally incompatible with AWS Lambda's serverless execution model, which imposes cold start penalties, a 15-minute timeout ceiling, stateless invocations, and a 250MB package size limit. We present LambdaLLM, the first orchestration framework purpose-built for Lambda's constraints. LambdaLLM achieves a core package size of 4.8MB (versus 400MB+ for LangChain), adds less than 50ms to cold start overhead, provides transparent DynamoDB-backed conversation state, and implements checkpoint/resume semantics for multi-step chains that survive Lambda timeouts. In production deployments across three enterprise clients, LambdaLLM reduced GenAI infrastructure costs by 62\% compared to container-based alternatives while maintaining equivalent response quality. The framework is open-source and available at \url{https://github.com/substrai/lambdallm}.
+\noindent Large Language Model (LLM) orchestration frameworks such as LangChain and LlamaIndex assume persistent server processes with unlimited execution time and stateful memory. These assumptions make them fundamentally incompatible with AWS Lambda's serverless execution model, which imposes cold start penalties, a 15-minute timeout ceiling, stateless invocations, and a 250MB package size limit. We present LambdaLLM, the first orchestration framework purpose-built for Lambda's constraints. LambdaLLM achieves a core package size of 4.8MB (versus 400MB+ for LangChain), adds less than 50ms to cold start overhead, provides transparent DynamoDB-backed conversation state, and implements checkpoint/resume semantics for multi-step chains that survive Lambda timeouts. In production deployments across three enterprise clients, LambdaLLM reduced GenAI infrastructure costs by 62\% compared to container-based alternatives while maintaining equivalent response quality. The framework is open-source and available at \url{https://github.com/substrai/lambdallm}.
+\vspace{1em}
 \end{abstract}
+\end{@twocolumnfalse}
+]
 
+% =====================================================================
 \section{Introduction}
+% =====================================================================
 
 The adoption of Large Language Models in production systems has accelerated dramatically since 2023. Organizations deploying LLM-powered features face a fundamental architectural choice: run on persistent servers (containers, EC2) or leverage serverless compute (AWS Lambda). Serverless offers compelling advantages---zero idle cost, automatic scaling, and no infrastructure management---but existing LLM orchestration frameworks were not designed for this execution model.
 
-We encountered this problem firsthand while deploying GenAI solutions for enterprise clients in healthcare, fintech, and e-commerce. Our initial approach used LangChain on Lambda, which resulted in 4-8 second cold starts, frequent timeout crashes during multi-step agent loops, and complete loss of conversation state between invocations. The 250MB unzipped package limit was routinely exceeded by LangChain's dependency tree alone.
+We encountered this problem firsthand while deploying GenAI solutions for enterprise clients in healthcare, fintech, and e-commerce. Our initial approach used LangChain on Lambda, which resulted in 4--8 second cold starts, frequent timeout crashes during multi-step agent loops, and complete loss of conversation state between invocations. The 250MB unzipped package limit was routinely exceeded by LangChain's dependency tree alone.
 
 After building custom solutions for three separate clients, we identified recurring patterns that could be abstracted into a reusable framework. LambdaLLM is the result of extracting and generalizing these patterns into an open-source framework that treats Lambda's constraints as first-class design requirements rather than obstacles to work around.
 
 Our contributions are:
-\begin{enumerate}
-    \item A serverless-native LLM orchestration framework with a 4.8MB core package size
-    \item A checkpoint/resume mechanism for multi-step chains that survives Lambda timeouts
-    \item A cost-aware model routing system that automatically selects the cheapest model meeting quality thresholds
-    \item Transparent DynamoDB-backed state management with configurable memory strategies
-    \item Empirical evaluation demonstrating 94\% cold start reduction and 62\% cost savings versus container alternatives
+\begin{enumerate}[leftmargin=*,itemsep=2pt,topsep=2pt]
+    \item A serverless-native LLM orchestration framework with a 4.8MB core package size.
+    \item A checkpoint/resume mechanism for multi-step chains that survives Lambda timeouts.
+    \item A cost-aware model routing system that automatically selects the cheapest model meeting quality thresholds.
+    \item Transparent DynamoDB-backed state management with configurable memory strategies.
+    \item Empirical evaluation demonstrating 94\% cold start reduction and 62\% cost savings versus container alternatives.
 \end{enumerate}
 
+% =====================================================================
 \section{Background and Related Work}
+% =====================================================================
 
 \subsection{AWS Lambda Execution Model}
 
 AWS Lambda functions execute in ephemeral containers with the following constraints relevant to LLM workloads:
 
-\begin{itemize}
-    \item \textbf{Cold starts}: First invocation in a new container incurs initialization overhead. Package size directly correlates with cold start duration---each additional MB adds approximately 10-50ms.
-    \item \textbf{Stateless execution}: No memory persists between invocations. Conversation history, chain progress, and agent state must be externalized.
-    \item \textbf{15-minute timeout}: Maximum execution time is 900 seconds. Long-running agent loops or multi-step chains must complete within this window or fail entirely.
-    \item \textbf{250MB package limit}: Unzipped deployment package cannot exceed 250MB (or 50MB zipped for direct upload).
-    \item \textbf{Pay-per-invocation}: Billing is per-request with millisecond granularity, making cost optimization directly impactful.
+\begin{itemize}[leftmargin=*,itemsep=2pt,topsep=2pt]
+    \item \textbf{Cold starts:} First invocation in a new container incurs initialization overhead. Package size directly correlates with cold start duration---each additional MB adds approximately 10--50ms.
+    \item \textbf{Stateless execution:} No memory persists between invocations. Conversation history, chain progress, and agent state must be externalized.
+    \item \textbf{15-minute timeout:} Maximum execution time is 900 seconds. Long-running agent loops or multi-step chains must complete within this window or fail entirely.
+    \item \textbf{250MB package limit:} Unzipped deployment package cannot exceed 250MB (or 50MB zipped for direct upload).
+    \item \textbf{Pay-per-invocation:} Billing is per-request with millisecond granularity, making cost optimization directly impactful.
 \end{itemize}
 
 \subsection{Existing LLM Frameworks}
 
-\textbf{LangChain} \cite{langchain} is the most widely adopted LLM orchestration framework. It provides chains, agents, and memory abstractions but assumes persistent processes. Its dependency tree (including numpy, pydantic, and numerous sub-packages) exceeds 400MB unzipped, making Lambda deployment impossible without aggressive pruning. Even with Lambda layers, cold starts averaged 4.2 seconds in our benchmarks.
+\textbf{LangChain}~\cite{langchain} is the most widely adopted LLM orchestration framework. It provides chains, agents, and memory abstractions but assumes persistent processes. Its dependency tree (including \texttt{numpy}, \texttt{pydantic}, and numerous sub-packages) exceeds 400MB unzipped, making Lambda deployment impossible without aggressive pruning. Even with Lambda layers, cold starts averaged 4.2 seconds in our benchmarks.
 
-\textbf{LlamaIndex} \cite{llamaindex} focuses on retrieval-augmented generation (RAG) with similar server-first assumptions. Its indexing operations assume persistent storage and long-running processes incompatible with Lambda's ephemeral model.
+\textbf{LlamaIndex}~\cite{llamaindex} focuses on retrieval-augmented generation (RAG) with similar server-first assumptions. Its indexing operations assume persistent storage and long-running processes incompatible with Lambda's ephemeral model.
 
-\textbf{Semantic Kernel} \cite{semantickernel} targets .NET and Python with a plugin-based architecture. While lighter than LangChain, it still assumes stateful execution and does not address Lambda-specific constraints.
+\textbf{Semantic Kernel}~\cite{semantickernel} targets .NET and Python with a plugin-based architecture. While lighter than LangChain, it still assumes stateful execution and does not address Lambda-specific constraints.
 
 \textbf{AWS Bedrock Agents} provides managed agent execution but offers limited customization, no cost control, and vendor lock-in to the Bedrock ecosystem. Users cannot implement custom routing, budgets, or observability.
 
 None of these frameworks address the fundamental mismatch between LLM orchestration requirements (state, long execution, large dependencies) and Lambda's execution model (stateless, time-bounded, size-constrained).
 
+% =====================================================================
 \section{System Design}
+% =====================================================================
 
 LambdaLLM is designed around seven principles derived from our production experience:
 
-\begin{enumerate}
-    \item \textbf{Convention over configuration}: Zero-config defaults that work immediately
-    \item \textbf{Inversion of control}: Framework owns the execution lifecycle; users provide business logic
-    \item \textbf{Plugin architecture}: Providers, middleware, and adapters are swappable without modifying core
-    \item \textbf{Declarative over imperative}: YAML configuration describes intent; framework determines execution
-    \item \textbf{Observable by default}: Every operation is traced and metered without explicit instrumentation
-    \item \textbf{Infrastructure as byproduct}: One command generates and deploys all AWS resources
-    \item \textbf{Escape hatches}: Users can drop to raw AWS SDK access at any point
+\begin{enumerate}[leftmargin=*,itemsep=2pt,topsep=2pt]
+    \item \textbf{Convention over configuration:} Zero-config defaults that work immediately.
+    \item \textbf{Inversion of control:} Framework owns the execution lifecycle; users provide business logic.
+    \item \textbf{Plugin architecture:} Providers, middleware, and adapters are swappable without modifying core.
+    \item \textbf{Declarative over imperative:} YAML configuration describes intent; framework determines execution.
+    \item \textbf{Observable by default:} Every operation is traced and metered without explicit instrumentation.
+    \item \textbf{Infrastructure as byproduct:} One command generates and deploys all AWS resources.
+    \item \textbf{Escape hatches:} Users can drop to raw AWS SDK access at any point.
 \end{enumerate}
 
 \subsection{Architecture Overview}
 
 The framework consists of three layers:
 
-\textbf{Runtime Layer}: The \texttt{@handler} decorator wraps Lambda functions with LLM orchestration, providing model invocation, error handling with exponential backoff, timeout awareness, and response formatting. The \texttt{LambdaLLMContext} object passed to handlers provides \texttt{invoke()}, \texttt{invoke\_structured()}, and \texttt{get\_raw\_client()} methods.
+\textbf{Runtime Layer:} The \texttt{@handler} decorator wraps Lambda functions with LLM orchestration, providing model invocation, error handling with exponential backoff, timeout awareness, and response formatting. The \texttt{LambdaLLMContext} object passed to handlers provides \texttt{invoke()}, \texttt{invoke\_structured()}, and \texttt{get\_raw\_client()} methods.
 
-\textbf{Plugin Layer}: Interchangeable providers (Bedrock, with extension points for OpenAI, Anthropic direct), middleware (logging, cost tracking, authentication), state adapters (DynamoDB, Redis), and model routers (cost-optimized, quality-first, rule-based).
+\textbf{Plugin Layer:} Interchangeable providers (Bedrock, with extension points for OpenAI, Anthropic direct), middleware (logging, cost tracking, authentication), state adapters (DynamoDB, Redis), and model routers (cost-optimized, quality-first, rule-based).
 
-\textbf{Infrastructure Layer}: SAM and CDK template generators that produce deployment-ready CloudFormation from the framework configuration file.
+\textbf{Infrastructure Layer:} SAM and CDK template generators that produce deployment-ready CloudFormation from the framework configuration file.
 
 \subsection{Cold Start Optimization}
 
 We achieve sub-50ms framework overhead through:
 
-\begin{itemize}
-    \item \textbf{Zero required dependencies}: The core package imports only Python standard library modules at load time. boto3 and other AWS SDK components are imported lazily on first use.
-    \item \textbf{Module-level client caching}: AWS service clients are instantiated once and cached at module scope, surviving across warm invocations via Lambda container reuse.
-    \item \textbf{Minimal import tree}: The \texttt{\_\_init\_\_.py} imports only lightweight dataclass definitions. Heavy modules (providers, observability) are loaded on demand.
+\begin{itemize}[leftmargin=*,itemsep=2pt,topsep=2pt]
+    \item \textbf{Zero required dependencies:} The core package imports only Python standard library modules at load time. \texttt{boto3} and other AWS SDK components are imported lazily on first use.
+    \item \textbf{Module-level client caching:} AWS service clients are instantiated once and cached at module scope, surviving across warm invocations via Lambda container reuse.
+    \item \textbf{Minimal import tree:} The \texttt{\_\_init\_\_.py} imports only lightweight dataclass definitions. Heavy modules (providers, observability) are loaded on demand.
 \end{itemize}
 
 \subsection{State Management}
 
 Lambda's statelessness is addressed through a transparent DynamoDB-backed session layer:
 
-\begin{lstlisting}[language=Python]
+\begin{lstlisting}
 @handler(session=Session(store="dynamodb", ttl_hours=24))
 def chat_handler(event, context):
     session = context.session  # auto-loaded
@@ -148,7 +202,7 @@ Memory strategies (sliding window, summarization, semantic retrieval) prevent co
 
 Multi-step chains that risk exceeding Lambda's timeout implement checkpoint semantics:
 
-\begin{lstlisting}[language=Python]
+\begin{lstlisting}
 chain = Chain(
     name="analysis",
     steps=[
@@ -166,54 +220,58 @@ Before each step, the runner checks \texttt{context.remaining\_time\_ms}. If rem
 
 The framework includes a routing layer that selects models based on input complexity and budget constraints:
 
-\begin{itemize}
-    \item Short prompts ($<$100 tokens) route to Claude 3 Haiku (\$0.25/M input tokens)
-    \item Complex prompts route to Claude 3 Sonnet (\$3.00/M input tokens)
-    \item When daily budget exceeds 80\% utilization, all requests downgrade to the cheapest available model
+\begin{itemize}[leftmargin=*,itemsep=2pt,topsep=2pt]
+    \item Short prompts ($<$100 tokens) route to Claude 3 Haiku (\$0.25/M input tokens).
+    \item Complex prompts route to Claude 3 Sonnet (\$3.00/M input tokens).
+    \item When daily budget exceeds 80\% utilization, all requests downgrade to the cheapest available model.
 \end{itemize}
 
 Budget state is tracked in DynamoDB with 60-second caching to minimize read costs.
 
+% =====================================================================
 \section{Implementation}
+% =====================================================================
 
-LambdaLLM is implemented in Python (primary, 7,100+ lines) and TypeScript (full parity, 2,000+ lines). The Python package is published as \texttt{substrai-lambdallm} on PyPI; the TypeScript package under the same name on npm.
+LambdaLLM is implemented in Python (primary, 7{,}100+ lines) and TypeScript (full parity, 2{,}000+ lines). The Python package is published as \texttt{substrai-lambdallm} on PyPI; the TypeScript package under the same name on npm.
 
 Key implementation decisions:
 
-\begin{itemize}
-    \item \textbf{Build system}: Hatchling (fast, minimal configuration)
-    \item \textbf{Type safety}: Dataclasses for all data structures (zero-dependency alternative to Pydantic)
-    \item \textbf{Testing}: 116 unit/integration tests (Python), 44 tests (TypeScript)
-    \item \textbf{CI/CD}: GitHub Actions with matrix testing across Python 3.10/3.11/3.12
+\begin{itemize}[leftmargin=*,itemsep=2pt,topsep=2pt]
+    \item \textbf{Build system:} Hatchling (fast, minimal configuration).
+    \item \textbf{Type safety:} Dataclasses for all data structures (zero-dependency alternative to Pydantic).
+    \item \textbf{Testing:} 116 unit/integration tests (Python), 44 tests (TypeScript).
+    \item \textbf{CI/CD:} GitHub Actions with matrix testing across Python 3.10/3.11/3.12.
 \end{itemize}
 
 The Bedrock provider handles request formatting differences between model families (Anthropic Messages API, Amazon Titan, Meta Llama) behind a unified \texttt{invoke(prompt, config)} interface.
 
+% =====================================================================
 \section{Evaluation}
+% =====================================================================
 
-We evaluate LambdaLLM against three baselines: LangChain (v1.2.18 with langchain-aws), raw boto3, and AWS Bedrock Agents. All benchmarks were conducted on May 11, 2026 in the us-east-1 region using Python 3.14 with real AWS Bedrock API calls.
+We evaluate LambdaLLM against three baselines: LangChain (v1.2.18 with \texttt{langchain-aws}), raw \texttt{boto3}, and AWS Bedrock Agents. All benchmarks were conducted on May 11, 2026 in the \texttt{us-east-1} region using Python 3.14 with real AWS Bedrock API calls.
 
 \subsection{Methodology}
 
-All benchmarks were executed on May 11, 2026 from a macOS development machine (Apple Silicon, 16GB RAM) connecting to AWS services in the us-east-1 region. We describe the methodology for each measurement category to ensure reproducibility.
+All benchmarks were executed on May 11, 2026 from a macOS development machine (Apple Silicon, 16GB RAM) connecting to AWS services in the \texttt{us-east-1} region. We describe the methodology for each measurement category to ensure reproducibility.
 
 \subsubsection{Environment Configuration}
 
-\begin{itemize}
-    \item \textbf{Python version}: 3.14.4 (CPython)
-    \item \textbf{AWS SDK}: boto3 1.43.6, botocore 1.43.6
-    \item \textbf{LambdaLLM version}: 1.0.1 (substrai-lambdallm on PyPI)
-    \item \textbf{LangChain version}: 1.2.18, langchain-aws 1.4.6
-    \item \textbf{Region}: us-east-1 (N. Virginia)
-    \item \textbf{Models}: Claude 3 Haiku, Claude 3 Sonnet, Titan Text Embeddings V2
-    \item \textbf{Authentication}: AWS IAM temporary credentials (STS session token)
+\begin{itemize}[leftmargin=*,itemsep=1pt,topsep=2pt]
+    \item Python version: 3.14.4 (CPython)
+    \item AWS SDK: \texttt{boto3} 1.43.6, \texttt{botocore} 1.43.6
+    \item LambdaLLM version: 1.0.1 (\texttt{substrai-lambdallm} on PyPI)
+    \item LangChain version: 1.2.18, \texttt{langchain-aws} 1.4.6
+    \item Region: \texttt{us-east-1} (N. Virginia)
+    \item Models: Claude 3 Haiku, Claude 3 Sonnet, Titan Text Embeddings V2
+    \item Authentication: AWS IAM temporary credentials (STS session token)
 \end{itemize}
 
 \subsubsection{Package Size Measurement}
 
 Package sizes were measured by installing each framework into isolated temporary directories using \texttt{pip install <package> -t /tmp/isolated-dir}. This captures the complete dependency tree as it would appear in a Lambda deployment package. Size was calculated by recursively summing all file sizes in the installation directory:
 
-\begin{lstlisting}[language=Python]
+\begin{lstlisting}
 total_size = sum(
     os.path.getsize(os.path.join(dp, f))
     for dp, dn, fns in os.walk(install_dir)
@@ -227,45 +285,45 @@ Each measurement was performed in a fresh temporary directory to avoid cross-con
 
 Invocation latency was measured as wall-clock time from immediately before the API call to immediately after response parsing:
 
-\begin{lstlisting}[language=Python]
+\begin{lstlisting}
 start = time.time()
-response = client.invoke_model(modelId=model_id, body=body, ...)
+response = client.invoke_model(
+    modelId=model_id, body=body, ...)
 result = json.loads(response["body"].read())
 latency_ms = (time.time() - start) * 1000
 \end{lstlisting}
 
-For each framework (LambdaLLM, LangChain, raw boto3), we executed the same prompt---a 38-token summarization request using Claude 3 Haiku---and measured 5-10 consecutive warm invocations with 500ms delays between calls to avoid throttling. The first invocation was excluded from averages to eliminate client-side initialization effects (boto3 client creation, TLS handshake).
+For each framework (LambdaLLM, LangChain, raw \texttt{boto3}), we executed the same prompt---a 38-token summarization request using Claude 3 Haiku---and measured 5--10 consecutive warm invocations with 500ms delays between calls to avoid throttling. The first invocation was excluded from averages to eliminate client-side initialization effects (\texttt{boto3} client creation, TLS handshake).
 
-For the framework overhead test, we compared 10 invocations through LambdaLLM's \texttt{@handler} decorator against 10 direct boto3 \texttt{invoke\_model} calls with identical prompts. The negative overhead (-13.5\%) observed for LambdaLLM is attributable to module-level client caching: LambdaLLM instantiates the boto3 client once at module scope and reuses it across all invocations, whereas each raw boto3 measurement created a fresh client reference (though the underlying connection pool was shared by the Python process).
+For the framework overhead test, we compared 10 invocations through LambdaLLM's \texttt{@handler} decorator against 10 direct \texttt{boto3} \texttt{invoke\_model} calls with identical prompts. The negative overhead ($-13.5\%$) observed for LambdaLLM is attributable to module-level client caching: LambdaLLM instantiates the \texttt{boto3} client once at module scope and reuses it across all invocations, whereas each raw \texttt{boto3} measurement created a fresh client reference (though the underlying connection pool was shared by the Python process).
 
 \subsubsection{Cost Calculation}
 
 Per-request cost was calculated using Bedrock's published pricing (as of May 2026):
 
-\begin{itemize}
-    \item Claude 3 Haiku: \$0.00025 per 1K input tokens, \$0.00125 per 1K output tokens
-    \item Claude 3 Sonnet: \$0.003 per 1K input tokens, \$0.015 per 1K output tokens
+\begin{itemize}[leftmargin=*,itemsep=1pt,topsep=2pt]
+    \item Claude 3 Haiku: \$0.00025 per 1K input tokens, \$0.00125 per 1K output tokens.
+    \item Claude 3 Sonnet: \$0.003 per 1K input tokens, \$0.015 per 1K output tokens.
 \end{itemize}
 
 The formula applied by LambdaLLM's cost tracker:
-
 \[
-\text{cost} = \frac{\text{tokens\_in}}{1000} \times \text{price\_in} + \frac{\text{tokens\_out}}{1000} \times \text{price\_out}
+\text{cost} = \frac{\text{tokens}_{\text{in}}}{1000} \times \text{price}_{\text{in}} + \frac{\text{tokens}_{\text{out}}}{1000} \times \text{price}_{\text{out}}
 \]
 
-We verified accuracy by comparing the framework's reported cost (\$0.000015 for a 14-token-in, 9-token-out request) against manual calculation: $(14/1000) \times 0.00025 + (9/1000) \times 0.00125 = \$0.0000148$. The 1.4\% variance is within acceptable floating-point precision.
+We verified accuracy by comparing the framework's reported cost (\$0.000015 for a 14-token-in, 9-token-out request) against manual calculation: $(14/1000)\times 0.00025 + (9/1000)\times 0.00125 = \$0.0000148$. The 1.4\% variance is within acceptable floating-point precision.
 
 \subsubsection{Session State Testing}
 
 Multi-turn memory was tested by:
-\begin{enumerate}
-    \item Creating a session with 5 messages (alternating user/assistant turns containing identifying information: name, occupation, location)
-    \item Persisting to an in-memory store (simulating DynamoDB's interface)
-    \item Creating a new Session object (simulating a fresh Lambda invocation)
-    \item Loading the session by ID from the store
-    \item Verifying all messages were recovered
-    \item Passing the conversation history to Claude 3 Haiku with a context-dependent question
-    \item Verifying the model's response correctly referenced information from earlier turns
+\begin{enumerate}[leftmargin=*,itemsep=1pt,topsep=2pt]
+    \item Creating a session with 5 messages (alternating user/assistant turns containing identifying information: name, occupation, location).
+    \item Persisting to an in-memory store (simulating DynamoDB's interface).
+    \item Creating a new Session object (simulating a fresh Lambda invocation).
+    \item Loading the session by ID from the store.
+    \item Verifying all messages were recovered.
+    \item Passing the conversation history to Claude 3 Haiku with a context-dependent question.
+    \item Verifying the model's response correctly referenced information from earlier turns.
 \end{enumerate}
 
 The model successfully answered ``Your name is Gaurav and you work on LambdaLLM'' when asked ``What is my name and what do I work on?''---confirming that the session state mechanism preserves sufficient context for multi-turn reasoning.
@@ -273,10 +331,11 @@ The model successfully answered ``Your name is Gaurav and you work on LambdaLLM'
 \subsubsection{Feature Comparison Methodology}
 
 The feature comparison table was constructed by:
-\begin{itemize}
-    \item \textbf{LangChain}: Installing v1.2.18 and attempting each feature. Memory persistence was tested by creating \texttt{ConversationBufferMemory}, adding messages, then simulating a new process (the memory object is garbage collected, losing all state).
-    \item \textbf{Bedrock Agents}: Evaluated via AWS documentation and console capabilities. Bedrock Agents is a managed service with no package size or cold start (AWS manages infrastructure), but offers limited customization and no cost control mechanisms.
-    \item \textbf{LambdaLLM}: Each feature was tested via the benchmark scripts committed to the repository at \texttt{benchmarks/results/}.
+
+\begin{itemize}[leftmargin=*,itemsep=1pt,topsep=2pt]
+    \item \textbf{LangChain:} Installing v1.2.18 and attempting each feature. Memory persistence was tested by creating \texttt{ConversationBufferMemory}, adding messages, then simulating a new process (the memory object is garbage collected, losing all state).
+    \item \textbf{Bedrock Agents:} Evaluated via AWS documentation and console capabilities. Bedrock Agents is a managed service with no package size or cold start (AWS manages infrastructure), but offers limited customization and no cost control mechanisms.
+    \item \textbf{LambdaLLM:} Each feature was tested via the benchmark scripts committed to the repository at \texttt{benchmarks/results/}.
 \end{itemize}
 
 \subsubsection{Reproducibility}
@@ -294,23 +353,24 @@ python benchmarks/run_benchmarks.py
 
 Note that absolute latency values will vary based on network conditions, AWS region load, and model availability. Relative comparisons between frameworks should remain consistent as all measurements use the same prompt, model, and region within each benchmark run.
 
-
 \subsection{Package Size}
 
 \begin{table}[h]
 \centering
+\small
+\caption{Deployment package size comparison. LambdaLLM core is 232$\times$ smaller than LangChain full stack. Measured via \texttt{pip install -t} to isolated directories.}
+\label{tab:package_size}
 \begin{tabular}{lr}
 \toprule
-\textbf{Framework} & \textbf{Package Size (MB)} \\
+\textbf{Framework} & \textbf{Size (MB)} \\
 \midrule
-LambdaLLM (core only) & 0.6 \\
-boto3 only & 23.8 \\
-LambdaLLM + boto3 & 24.4 \\
-LangChain + langchain-aws & 89.2 \\
-LangChain full stack & 139.4 \\
+LambdaLLM (core only)       & 0.6   \\
+\texttt{boto3} only         & 23.8  \\
+LambdaLLM + \texttt{boto3}  & 24.4  \\
+LangChain + langchain-aws   & 89.2  \\
+LangChain full stack        & 139.4 \\
 \bottomrule
 \end{tabular}
-\caption{Deployment package size comparison. LambdaLLM core is 232x smaller than LangChain full stack. Measured via \texttt{pip install -t} to isolated directories.}
 \end{table}
 
 LambdaLLM's core package is 0.6MB---well within Lambda's 250MB limit even with all dependencies. LangChain's full stack at 139.4MB consumes over half the available package budget before any application code is added.
@@ -321,54 +381,64 @@ We measured end-to-end latency for identical summarization prompts (38 input tok
 
 \begin{table}[h]
 \centering
+\small
+\caption{Warm invocation latency (Claude 3 Haiku, \texttt{us-east-1}, 5 samples each). LambdaLLM is 12\% faster than LangChain and 29\% faster than raw \texttt{boto3}.}
+\label{tab:latency}
 \begin{tabular}{lrrr}
 \toprule
-\textbf{Framework} & \textbf{Avg (ms)} & \textbf{Min (ms)} & \textbf{Max (ms)} \\
+\textbf{Framework} & \textbf{Avg} & \textbf{Min} & \textbf{Max} \\
+                   & (ms)         & (ms)         & (ms)         \\
 \midrule
-LambdaLLM & 617 & 540 & 712 \\
-LangChain & 697 & 620 & 810 \\
-Raw boto3 & 864 & 780 & 950 \\
+LambdaLLM   & 617 & 540 & 712 \\
+LangChain   & 697 & 620 & 810 \\
+Raw boto3   & 864 & 780 & 950 \\
 \bottomrule
 \end{tabular}
-\caption{Warm invocation latency (Claude 3 Haiku, us-east-1, 5 samples each). LambdaLLM is 12\% faster than LangChain and 29\% faster than raw boto3.}
 \end{table}
 
-LambdaLLM achieves lower latency than raw boto3 due to module-level client caching and connection reuse across invocations. LangChain adds overhead from its abstraction layers but benefits from similar connection pooling.
+LambdaLLM achieves lower latency than raw \texttt{boto3} due to module-level client caching and connection reuse across invocations. LangChain adds overhead from its abstraction layers but benefits from similar connection pooling.
 
 \subsection{Model Comparison}
 
 \begin{table}[h]
 \centering
+\small
+\caption{Per-model latency benchmarks (10 calls each, identical prompts). Titan Embeddings V2 produces 1024-dimensional vectors.}
+\label{tab:models}
 \begin{tabular}{lrrr}
 \toprule
-\textbf{Model} & \textbf{Avg Latency (ms)} & \textbf{Avg Tokens In} & \textbf{Avg Tokens Out} \\
+\textbf{Model} & \textbf{Lat.} & \textbf{Tok.} & \textbf{Tok.} \\
+               & (ms)          & In            & Out           \\
 \midrule
-Claude 3 Haiku & 570 & 38 & 26 \\
-Claude 3 Sonnet & 791 & 38 & 25 \\
-Titan Embed Text V2 & 169 & 5 & N/A (1024-dim) \\
+Claude 3 Haiku       & 570 & 38 & 26 \\
+Claude 3 Sonnet      & 791 & 38 & 25 \\
+Titan Embed Text V2  & 169 & 5  & N/A* \\
 \bottomrule
 \end{tabular}
-\caption{Per-model latency benchmarks (10 calls each, identical prompts). Titan Embeddings V2 produces 1024-dimensional vectors.}
+\par\smallskip
+\raggedright\scriptsize *1024-dim vector
 \end{table}
 
 \subsection{Framework Overhead}
 
-To isolate framework overhead from model latency, we compared LambdaLLM's handler execution against raw boto3 calls for 10 identical requests:
+To isolate framework overhead from model latency, we compared LambdaLLM's handler execution against raw \texttt{boto3} calls for 10 identical requests:
 
 \begin{table}[h]
 \centering
-\begin{tabular}{lrr}
+\small
+\caption{Framework overhead measurement. LambdaLLM adds negative overhead due to connection reuse optimization. Cost per request: \$0.000044.}
+\label{tab:overhead}
+\begin{tabular}{lrl}
 \toprule
-\textbf{Approach} & \textbf{Avg Latency (ms)} & \textbf{Overhead} \\
+\textbf{Approach} & \textbf{Avg (ms)} & \textbf{Overhead} \\
 \midrule
-Raw boto3 (direct) & 822 & baseline \\
-LambdaLLM @handler & 712 & -13.5\% (faster) \\
+Raw boto3 (direct)    & 822 & baseline       \\
+LambdaLLM \texttt{@handler} & 712 & $-13.5\%$ (faster) \\
 \bottomrule
 \end{tabular}
-\caption{Framework overhead measurement. LambdaLLM adds negative overhead due to connection reuse optimization. Cost per request: \$0.000044.}
 \end{table}
 
-The negative overhead is attributable to LambdaLLM's module-level client caching: the boto3 client is instantiated once and reused across all invocations within a handler, whereas naive raw boto3 usage may re-establish connections.
+The negative overhead is attributable to LambdaLLM's module-level client caching: the \texttt{boto3} client is instantiated once and reused across all invocations within a handler, whereas naive raw \texttt{boto3} usage may re-establish connections.
 
 \subsection{Cost Tracking Accuracy}
 
@@ -378,88 +448,103 @@ LambdaLLM's built-in cost tracker reported \$0.000015 per request for a simple s
 
 We tested multi-turn conversation memory across simulated Lambda invocations:
 
-\begin{itemize}
-    \item Stored 5 messages (user + assistant turns) to DynamoDB-backed session
-    \item Simulated new Lambda invocation (fresh context)
-    \item Reloaded session: all 4 messages recovered successfully
-    \item Asked context-dependent question: model correctly answered ``Your name is Gaurav and you work on LambdaLLM''
+\begin{itemize}[leftmargin=*,itemsep=1pt,topsep=2pt]
+    \item Stored 5 messages (user + assistant turns) to DynamoDB-backed session.
+    \item Simulated new Lambda invocation (fresh context).
+    \item Reloaded session: all 4 messages recovered successfully.
+    \item Asked context-dependent question: model correctly answered ``Your name is Gaurav and you work on LambdaLLM''.
 \end{itemize}
 
 LangChain's \texttt{ConversationBufferMemory} stores state in-process and loses all history between Lambda invocations. LambdaLLM's DynamoDB-backed sessions survive cold starts by design.
 
 \subsection{Feature Comparison Summary}
 
+Table~\ref{tab:features} summarizes feature-level differences across LambdaLLM, LangChain, and AWS Bedrock Agents based on the methodology described in Section~5.1.6.
+
 \begin{table}[h]
 \centering
-\begin{tabular}{lccc}
+\footnotesize
+\caption{Feature comparison across frameworks. LambdaLLM provides the most complete feature set for serverless LLM deployment.}
+\label{tab:features}
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.1}
+\begin{tabular}{@{}p{2.1cm}p{1.4cm}p{1.4cm}p{1.6cm}@{}}
 \toprule
-\textbf{Feature} & \textbf{LambdaLLM} & \textbf{LangChain} & \textbf{Bedrock Agents} \\
+\textbf{Feature} & \textbf{Lambda-LLM} & \textbf{Lang-Chain} & \textbf{Bedrock Agents} \\
 \midrule
-Package size & 0.6 MB & 139.4 MB & N/A (managed) \\
-Avg latency & 617 ms & 697 ms & varies \\
-Memory persistence & DynamoDB & Lost on Lambda & Limited \\
-Cost tracking & Built-in & None & None \\
-Timeout recovery & Checkpoint & Crashes & N/A \\
-A/B testing & Built-in & None & None \\
-Cost-aware routing & Built-in & None & None \\
-Open source & Yes (MIT) & Yes & No \\
-Multi-provider & Extensible & Yes & Bedrock only \\
+Package size       & 0.6 MB       & 139.4 MB        & managed       \\
+Avg latency        & 617 ms       & 697 ms          & varies        \\
+Memory persist.    & DynamoDB     & In-process      & Limited       \\
+Cost tracking      & Built-in     & None            & None          \\
+Timeout recovery   & Checkpoint   & Crashes         & N/A           \\
+A/B testing        & Built-in     & None            & None          \\
+Cost routing       & Built-in     & None            & None          \\
+Open source        & Yes (MIT)    & Yes             & No            \\
+Multi-provider     & Extensible   & Yes             & Bedrock only  \\
 \bottomrule
 \end{tabular}
-\caption{Feature comparison across frameworks. LambdaLLM provides the most complete feature set for serverless LLM deployment.}
 \end{table}
 
+% =====================================================================
 \section{Discussion}
+% =====================================================================
 
 \subsection{Limitations}
 
 LambdaLLM does not address all LLM deployment scenarios:
 
-\begin{itemize}
-    \item \textbf{Streaming}: While Lambda Response Streaming is supported, WebSocket-based streaming requires API Gateway WebSocket APIs with additional complexity.
-    \item \textbf{GPU inference}: Lambda does not offer GPU instances. Self-hosted models requiring GPU are out of scope; the framework targets API-based models (Bedrock, OpenAI).
-    \item \textbf{Very long chains}: Chains exceeding 50+ steps may require excessive checkpoint/resume cycles. For such workloads, Step Functions orchestration is more appropriate.
-    \item \textbf{Cold start floor}: The boto3 SDK itself contributes ~380ms to cold start. This is a Lambda platform limitation, not a framework limitation.
+\begin{itemize}[leftmargin=*,itemsep=2pt,topsep=2pt]
+    \item \textbf{Streaming:} While Lambda Response Streaming is supported, WebSocket-based streaming requires API Gateway WebSocket APIs with additional complexity.
+    \item \textbf{GPU inference:} Lambda does not offer GPU instances. Self-hosted models requiring GPU are out of scope; the framework targets API-based models (Bedrock, OpenAI).
+    \item \textbf{Very long chains:} Chains exceeding 50+ steps may require excessive checkpoint/resume cycles. For such workloads, Step Functions orchestration is more appropriate.
+    \item \textbf{Cold start floor:} The \texttt{boto3} SDK itself contributes 380ms to cold start. This is a Lambda platform limitation, not a framework limitation.
 \end{itemize}
 
 \subsection{Future Work}
 
 Planned extensions include: (1) a visual chain builder for non-developer users, (2) automatic prompt optimization based on analytics data, (3) multi-region failover for high-availability deployments, and (4) integration with the broader SubstrAI framework ecosystem (GuardrailGraph for AI safety, CostSentinel for governance).
 
+% =====================================================================
 \section{Conclusion}
+% =====================================================================
 
 We presented LambdaLLM, a serverless-native LLM orchestration framework that addresses the fundamental incompatibility between existing LLM frameworks and AWS Lambda's execution model. Through lazy initialization, transparent state management, checkpoint/resume semantics, and cost-aware routing, LambdaLLM enables production GenAI deployments on Lambda with 94\% faster cold starts, 62\% lower costs, and 97\% chain completion rates compared to existing approaches.
 
 The framework is open-source (MIT license), published on PyPI and npm as \texttt{substrai-lambdallm}, and actively maintained at \url{https://github.com/substrai/lambdallm}.
 
+% =====================================================================
+\onecolumn
 \begin{thebibliography}{9}
+% =====================================================================
+
+\footnotesize
 
 \bibitem{langchain}
-Chase, H. (2022). LangChain: Building applications with LLMs through composability. \url{https://github.com/langchain-ai/langchain}
+H.~Chase, ``LangChain: Building applications with LLMs through composability,'' 2022. [Online]. Available: \url{https://github.com/langchain-ai/langchain}
 
 \bibitem{llamaindex}
-Liu, J. (2022). LlamaIndex: Data framework for LLM applications. \url{https://github.com/run-llama/llama_index}
+J.~Liu, ``LlamaIndex: Data framework for LLM applications,'' 2022. [Online]. Available: \url{https://github.com/run-llama/llama_index}
 
 \bibitem{semantickernel}
-Microsoft (2023). Semantic Kernel: Integrate cutting-edge LLM technology quickly and easily. \url{https://github.com/microsoft/semantic-kernel}
+Microsoft, ``Semantic Kernel: Integrate cutting-edge LLM technology quickly and easily,'' 2023. [Online]. Available: \url{https://github.com/microsoft/semantic-kernel}
 
 \bibitem{lambda}
-Amazon Web Services (2014). AWS Lambda: Run code without thinking about servers. \url{https://aws.amazon.com/lambda/}
+Amazon Web Services, ``AWS Lambda: Run code without thinking about servers,'' 2014. [Online]. Available: \url{https://aws.amazon.com/lambda/}
 
 \bibitem{bedrock}
-Amazon Web Services (2023). Amazon Bedrock: Build and scale generative AI applications. \url{https://aws.amazon.com/bedrock/}
+Amazon Web Services, ``Amazon Bedrock: Build and scale generative AI applications,'' 2023. [Online]. Available: \url{https://aws.amazon.com/bedrock/}
 
-\bibitem{coldstart}
-Mikhail Shilkov (2020). Cold Starts in AWS Lambda. \textit{AWS re:Invent 2020}.
+\bibitem{shilkov}
+M.~Shilkov, ``Cold Starts in AWS Lambda,'' AWS re:Invent 2020, 2020.
 
-\bibitem{serverless-patterns}
-Yan Cui (2023). Serverless Patterns for AI/ML Workloads. \textit{ServerlessDays London}.
+\bibitem{cui}
+Y.~Cui, ``Serverless Patterns for AI/ML Workloads,'' ServerlessDays London, 2023.
 
 \bibitem{react}
-Yao, S., et al. (2023). ReAct: Synergizing Reasoning and Acting in Language Models. \textit{ICLR 2023}.
+S.~Yao et al., ``ReAct: Synergizing Reasoning and Acting in Language Models,'' in \emph{Proc. ICLR}, 2023.
 
 \bibitem{dynamodb}
-Amazon Web Services (2012). Amazon DynamoDB: Fast, flexible NoSQL database service. \url{https://aws.amazon.com/dynamodb/}
+Amazon Web Services, ``Amazon DynamoDB: Fast, flexible NoSQL database service,'' 2012. [Online]. Available: \url{https://aws.amazon.com/dynamodb/}
 
 \end{thebibliography}
 
