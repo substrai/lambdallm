@@ -30,7 +30,7 @@ dependencies = []
 bedrock = ["boto3>=1.28.0"]
 xray = ["aws-xray-sdk>=2.12.0"]
 yaml = ["pyyaml>=6.0"]
-dev = ["pytest>=7.0", "pytest-asyncio>=0.21", "ruff>=0.1.0", "moto>=4.0"]
+dev = ["pytest>=7.0", "pytest-asyncio>=0.21", "pytest-cov>=4.0", "ruff>=0.1.0", "moto>=4.0"]
 all = ["boto3>=1.28.0", "aws-xray-sdk>=2.12.0", "pyyaml>=6.0"]
 
 [project.urls]
@@ -56,3 +56,12 @@ pythonpath = ["src"]
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/lambdallm"]
+
+[tool.coverage.run]
+source = ["lambdallm"]
+omit = ["*/tests/*", "*/cli/*"]
+
+[tool.coverage.report]
+show_missing = true
+skip_empty = true
+fail_under = 70

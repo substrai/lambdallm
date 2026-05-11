@@ -1,0 +1,78 @@
+site_name: LambdaLLM
+site_url: https://substrai.github.io/lambdallm
+site_description: Serverless-native LLM orchestration framework for AWS Lambda
+site_author: Gaurav Kumar Sinha
+repo_url: https://github.com/substrai/lambdallm
+repo_name: substrai/lambdallm
+
+theme:
+  name: material
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: amber
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: indigo
+      accent: amber
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.tabs.link
+  icon:
+    repo: fontawesome/brands/github
+
+nav:
+  - Home: index.md
+  - Getting Started: getting-started.md
+  - Tutorials:
+    - Overview: tutorials.md
+  - API Reference: api-reference.md
+  - Architecture: architecture.md
+  - Migration Guide: migration-guide.md
+  - Troubleshooting: troubleshooting.md
+  - Contributing: contributing.md
+  - Changelog: changelog.md
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          paths: [src]
+          options:
+            show_source: true
+            show_root_heading: true
+            heading_level: 3
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.details
+  - admonition
+  - tables
+  - toc:
+      permalink: true
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/substrai
+    - icon: fontawesome/brands/python
+      link: https://pypi.org/project/substrai-lambdallm/
+  generator: false
+
+copyright: Copyright &copy; 2026 Gaurav Kumar Sinha - SubstrAI

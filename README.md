@@ -8,6 +8,8 @@
 [![Tests](https://github.com/substrai/lambdallm/actions/workflows/ci.yml/badge.svg)](https://github.com/substrai/lambdallm/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
+[![Documentation](https://img.shields.io/badge/docs-substrai.github.io-blue)](https://substrai.github.io/lambdallm)
+[![codecov](https://codecov.io/gh/substrai/lambdallm/branch/main/graph/badge.svg)](https://codecov.io/gh/substrai/lambdallm)
 
 ## The Problem
 
@@ -157,6 +159,12 @@ agent = Agent(
 
 ## Documentation
 
+- [**Full Documentation**](https://substrai.github.io/lambdallm) — Getting started, tutorials, API reference
+- [Getting Started](https://substrai.github.io/lambdallm/getting-started/)
+- [Tutorials](https://substrai.github.io/lambdallm/tutorials/)
+- [API Reference](https://substrai.github.io/lambdallm/api-reference/)
+- [Architecture Guide](https://substrai.github.io/lambdallm/architecture/)
+- [Migration Guide](https://substrai.github.io/lambdallm/migration-guide/)
 - [Examples](https://github.com/substrai/lambdallm/tree/main/examples)
 - [Contributing](https://github.com/substrai/lambdallm/blob/main/CONTRIBUTING.md)
 - [Changelog](https://github.com/substrai/lambdallm/blob/main/CHANGELOG.md)
