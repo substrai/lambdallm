@@ -1,0 +1,90 @@
+{
+  "timestamp": "2026-05-11T13:28:15.988982",
+  "region": "us-east-1",
+  "tests": {
+    "package_size_mb": {
+      "substrai-lambdallm (core)": 0.6,
+      "substrai-lambdallm[bedrock]": 24.44,
+      "boto3 (raw)": 23.84
+    },
+    "model_latency": {
+      "claude-3-haiku": {
+        "model_id": "anthropic.claude-3-haiku-20240307-v1:0",
+        "avg_latency_ms": 570.0,
+        "min_latency_ms": 446.1,
+        "max_latency_ms": 864.8,
+        "p50_latency_ms": 555.1,
+        "avg_tokens_in": 38.0,
+        "avg_tokens_out": 25.3,
+        "samples": 10
+      },
+      "claude-3-sonnet": {
+        "model_id": "anthropic.claude-3-sonnet-20240229-v1:0",
+        "avg_latency_ms": 791.0,
+        "min_latency_ms": 658.4,
+        "max_latency_ms": 1026.0,
+        "p50_latency_ms": 755.7,
+        "avg_tokens_in": 38.0,
+        "avg_tokens_out": 23.0,
+        "samples": 10
+      }
+    },
+    "framework_overhead": {
+      "lambdallm_avg_ms": 711.6,
+      "raw_boto3_avg_ms": 822.5,
+      "overhead_ms": -110.9,
+      "overhead_percent": -13.5,
+      "lambdallm_avg_cost_usd": 4.4e-05,
+      "samples": 10
+    },
+    "session_state": {
+      "turns_stored": 5,
+      "state_persisted": true,
+      "context_retained_in_response": true,
+      "model_answer": "Your name is Gaurav and you work on LambdaLLM."
+    },
+    "chain_execution": {
+      "steps": 3,
+      "status": "completed",
+      "completed_steps": 3,
+      "has_output": true,
+      "output_preview": "The entities from the list are classified into people (Gaurav Kumar Sinha), companies (SubstrAI and LambdaLLM), and numbers (2026 and 1000)."
+    },
+    "cost_tracking": {
+      "tracked_cost_usd": 1.475e-05,
+      "expected_range_min": 1e-06,
+      "expected_range_max": 0.001,
+      "within_expected_range": true,
+      "cost_model_prices": {
+        "input": 0.00025,
+        "output": 0.00125
+      }
+    },
+    "prompt_templates": {
+      "tests_passed": 5,
+      "tests_total": 5,
+      "pass_rate": 1.0
+    },
+    "tool_system": {
+      "tools_registered": 2,
+      "calculate_result": 114.99999999999999,
+      "calculate_correct": false,
+      "time_result_valid": true,
+      "schemas_generated": 2,
+      "schema_has_params": true
+    },
+    "observability": {
+      "tracer_spans": 2,
+      "tracer_errors": 0,
+      "tracer_total_duration_ms": 12.5,
+      "metrics_buffered": 6,
+      "all_working": true
+    },
+    "ab_testing": {
+      "control_percent": 51.5,
+      "treatment_percent": 48.5,
+      "distribution_balanced": true,
+      "sticky_sessions_work": true
+    }
+  }
+}

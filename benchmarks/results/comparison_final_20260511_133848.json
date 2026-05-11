@@ -1,0 +1,26 @@
+{
+  "timestamp": "2026-05-11T13:38:48.035849",
+  "package_sizes_mb": {
+    "lambdallm_core": 0.6,
+    "lambdallm_bedrock": 24.4,
+    "langchain_full": 139.4,
+    "boto3": 23.8
+  },
+  "latency_avg_ms": {
+    "lambdallm": 617,
+    "langchain": 697,
+    "raw_boto3": 864
+  },
+  "titan_embeddings_v2": {
+    "dimension": 1024,
+    "avg_latency_ms": 169
+  },
+  "feature_winners": {
+    "package_size": "lambdallm (232x smaller than langchain)",
+    "latency": "lambdallm (12% faster than langchain, 29% faster than raw)",
+    "memory": "lambdallm (persists, langchain loses on Lambda)",
+    "cost_tracking": "lambdallm (only one with built-in)",
+    "timeout": "lambdallm (only one with checkpoint/resume)",
+    "observability": "lambdallm (full stack vs none)"
+  }
+}
