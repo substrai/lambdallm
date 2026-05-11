@@ -53,6 +53,20 @@ def lambda_handler(event, context):
 [![PyPI](https://badge.fury.io/py/substrai-lambdallm.svg)](https://pypi.org/project/substrai-lambdallm/)
 [![npm](https://badge.fury.io/js/substrai-lambdallm.svg)](https://www.npmjs.com/package/substrai-lambdallm)
 
+## TypeScript Quick Start
+
+```typescript
+import { handler, Model, Chain, Step } from 'substrai-lambdallm';
+
+export const lambdaHandler = handler(
+  { model: Model.CLAUDE_3_HAIKU },
+  async (event, context) => {
+    const result = await context.invoke('Summarize: {text}', { text: event.body.text });
+    return { statusCode: 200, body: { result, cost: context.totalCost } };
+  }
+);
+```
+
 ## Key Features
 
 | Feature | Description |
