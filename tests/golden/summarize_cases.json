@@ -1,0 +1,40 @@
+[
+  {
+    "name": "basic_summarization",
+    "input": {
+      "text": "LambdaLLM is a serverless framework for LLM orchestration on AWS Lambda. It provides handlers, chains, agents, and cost tracking.",
+      "max_words": 20
+    },
+    "expected_contains": [
+      "serverless",
+      "framework"
+    ],
+    "max_latency_ms": 5000
+  },
+  {
+    "name": "short_input",
+    "input": {
+      "text": "Hello world.",
+      "max_words": 5
+    },
+    "expected_contains": [
+      "hello"
+    ],
+    "max_latency_ms": 3000
+  },
+  {
+    "name": "technical_content",
+    "input": {
+      "text": "AWS Lambda functions are stateless compute units that execute code in response to events. They have a maximum timeout of 15 minutes and a package size limit of 250MB.",
+      "max_words": 30
+    },
+    "expected_contains": [
+      "Lambda"
+    ],
+    "expected_not_contains": [
+      "error",
+      "cannot"
+    ],
+    "max_latency_ms": 5000
+  }
+]
