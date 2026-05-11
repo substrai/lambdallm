@@ -10,6 +10,7 @@
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![Documentation](https://img.shields.io/badge/docs-substrai.github.io-blue)](https://substrai.github.io/lambdallm)
 [![codecov](https://codecov.io/gh/substrai/lambdallm/branch/main/graph/badge.svg)](https://codecov.io/gh/substrai/lambdallm)
+[![npm version](https://badge.fury.io/js/substrai-lambdallm.svg)](https://www.npmjs.com/package/substrai-lambdallm)
 
 ## The Problem
 
@@ -55,6 +56,8 @@ def lambda_handler(event, context):
 
 ## Installation
 
+### Python (primary)
+
 ```bash
 pip install substrai-lambdallm
 ```
@@ -69,6 +72,12 @@ With all optional dependencies:
 
 ```bash
 pip install "substrai-lambdallm[all]"
+```
+
+### npm (TypeScript SDK - coming soon)
+
+```bash
+npm install substrai-lambdallm
 ```
 
 ## Quick Start

@@ -10,8 +10,16 @@ Get from zero to a deployed GenAI API in under 10 minutes.
 
 ## Step 1: Install LambdaLLM (30 seconds)
 
+**Python (primary):**
+
 ```bash
 pip install "substrai-lambdallm[bedrock]"
+```
+
+**npm (TypeScript SDK - coming soon):**
+
+```bash
+npm install substrai-lambdallm
 ```
 
 Verify installation:

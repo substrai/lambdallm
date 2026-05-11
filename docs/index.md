@@ -38,9 +38,20 @@ def lambda_handler(event, context):
 
 ## Install
 
-```bash
-pip install substrai-lambdallm[bedrock]
-```
+=== "Python (pip)"
+
+    ```bash
+    pip install "substrai-lambdallm[bedrock]"
+    ```
+
+=== "npm"
+
+    ```bash
+    npm install substrai-lambdallm
+    ```
+
+[![PyPI](https://badge.fury.io/py/substrai-lambdallm.svg)](https://pypi.org/project/substrai-lambdallm/)
+[![npm](https://badge.fury.io/js/substrai-lambdallm.svg)](https://www.npmjs.com/package/substrai-lambdallm)
 
 ## Key Features
 
