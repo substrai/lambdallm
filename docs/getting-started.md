@@ -16,7 +16,7 @@ Get from zero to a deployed GenAI API in under 10 minutes.
 pip install "substrai-lambdallm[bedrock]"
 ```
 
-**npm (TypeScript SDK - coming soon):**
+**npm:**
 
 ```bash
 npm install substrai-lambdallm

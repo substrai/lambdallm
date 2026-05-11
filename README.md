@@ -74,7 +74,7 @@ With all optional dependencies:
 pip install "substrai-lambdallm[all]"
 ```
 
-### npm (TypeScript SDK - coming soon)
+### npm
 
 ```bash
 npm install substrai-lambdallm
