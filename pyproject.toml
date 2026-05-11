@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "lambdallm"
-version = "0.1.0"
+version = "1.0.0"
 description = "Serverless-native LLM orchestration framework for AWS Lambda"
 readme = "README.md"
 license = {text = "MIT"}
@@ -12,9 +12,9 @@ requires-python = ">=3.10"
 authors = [
     {name = "Gaurav Kumar Sinha", email = "gaurav@substrai.dev"},
 ]
-keywords = ["genai", "llm", "serverless", "aws", "lambda", "bedrock", "framework"]
+keywords = ["genai", "llm", "serverless", "aws", "lambda", "bedrock", "framework", "agents", "chains"]
 classifiers = [
-    "Development Status :: 3 - Alpha",
+    "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
@@ -28,14 +28,17 @@ dependencies = []
 
 [project.optional-dependencies]
 bedrock = ["boto3>=1.28.0"]
+xray = ["aws-xray-sdk>=2.12.0"]
+yaml = ["pyyaml>=6.0"]
 dev = ["pytest>=7.0", "pytest-asyncio>=0.21", "ruff>=0.1.0", "moto>=4.0"]
-all = ["boto3>=1.28.0"]
+all = ["boto3>=1.28.0", "aws-xray-sdk>=2.12.0", "pyyaml>=6.0"]
 
 [project.urls]
 Homepage = "https://substrai.dev"
 Repository = "https://github.com/substrai/lambdallm"
 Documentation = "https://docs.substrai.dev/lambdallm"
 Issues = "https://github.com/substrai/lambdallm/issues"
+Changelog = "https://github.com/substrai/lambdallm/blob/main/CHANGELOG.md"
 
 [project.scripts]
 lambdallm = "lambdallm.cli.main:cli"
