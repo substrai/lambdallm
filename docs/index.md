@@ -6,6 +6,7 @@
   <a href="getting-started/" style="padding: 12px 24px; background: #3f51b5; color: white; text-decoration: none; border-radius: 4px; margin: 0 8px;">Get Started</a>
   <a href="https://github.com/substrai/lambdallm" style="padding: 12px 24px; background: #333; color: white; text-decoration: none; border-radius: 4px; margin: 0 8px;">GitHub</a>
   <a href="https://pypi.org/project/substrai-lambdallm/" style="padding: 12px 24px; background: #006dad; color: white; text-decoration: none; border-radius: 4px; margin: 0 8px;">PyPI</a>
+  <a href="https://www.npmjs.com/package/substrai-lambdallm" style="padding: 12px 24px; background: #cb3837; color: white; text-decoration: none; border-radius: 4px; margin: 0 8px;">npm</a>
 </div>
 
 ## The Problem
