@@ -1,0 +1,11 @@
+[lint]
+select = ["E", "F", "W", "I"]
+ignore = ["E501"]
+
+[lint.isort]
+known-first-party = ["lambdallm"]
+
+[format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "auto"
