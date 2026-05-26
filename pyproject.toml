@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "substrai-lambdallm"
-version = "1.0.1"
+version = "1.1.0"
 description = "Serverless-native LLM orchestration framework for AWS Lambda"
 readme = "README.md"
 license = {text = "MIT"}
