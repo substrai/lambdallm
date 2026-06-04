@@ -8,7 +8,7 @@ Docs: https://docs.substrai.dev/lambdallm
 Author: Gaurav Kumar Sinha <gaurav@substrai.dev>
 """
 
-__version__ = "1.7.0"
+__version__ = "1.8.0"
 __author__ = "Gaurav Kumar Sinha"
 __email__ = "gaurav@substrai.dev"
 
