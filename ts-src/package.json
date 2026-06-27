@@ -1,0 +1,44 @@
+{
+  "name": "substrai-lambdallm",
+  "version": "2.1.0",
+  "description": "Serverless-native LLM orchestration framework for AWS Lambda",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist/**/*"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "test": "node --test dist/tests/",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "llm",
+    "serverless",
+    "aws-lambda",
+    "bedrock",
+    "ai",
+    "orchestration",
+    "chains",
+    "agents",
+    "streaming",
+    "cost-aware"
+  ],
+  "author": "Gaurav Kumar Sinha <gaurav@substrai.dev>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/substrai/lambdallm"
+  },
+  "homepage": "https://github.com/substrai/lambdallm",
+  "bugs": {
+    "url": "https://github.com/substrai/lambdallm/issues"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^26.0.1",
+    "typescript": "^5.0.0"
+  }
+}
