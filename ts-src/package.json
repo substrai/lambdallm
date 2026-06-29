@@ -1,6 +1,6 @@
 {
   "name": "substrai-lambdallm",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "Serverless-native LLM orchestration framework for AWS Lambda",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
